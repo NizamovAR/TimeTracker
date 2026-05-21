@@ -4,7 +4,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 
-import categoryRoutes from './routes/categoryRoutes'
+import categoryRoutes from './routes/categoryRoutes';
+import timeEntryRoutes from './routes/timeEntryRoutes';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 //Роуты
 app.use('/api/categories', categoryRoutes);
+app.use('/api/timeEntry', timeEntryRoutes);
 
 //Главная страница
 app.get('/', (req, res) => {

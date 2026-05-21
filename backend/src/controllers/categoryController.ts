@@ -10,12 +10,18 @@ export const getAllCategories = async (req: Request, res: Response) => {
             orderBy: { createdAt: 'desc' }
         });
         //отправляем объект categories
-        res.json(categories)
+        res.json({
+            success: true,
+            data: categories
+        });
     }
     //обработка ошибок
     catch (error) {
         console.error(error);
-        res.status(500).json({error: 'Что-то пошло не так при получении категории'});
+        res.status(500).json({
+            success: false,
+            error: 'Что-то пошло не так при получении категории'
+        });
     }
 };
 
@@ -27,7 +33,10 @@ export const createCategory = async (req: Request, res: Response) => {
 
         //Проверяем пришло ли имя
         if(!name) {
-            res.status(400).json({error: 'Имя категории обязательно' });
+            res.status(400).json({
+                success: false,
+                error: 'Имя категории обязательно' 
+            });
             return;
         }
         //создание новой категории
@@ -38,12 +47,18 @@ export const createCategory = async (req: Request, res: Response) => {
             }
         });
         //отправляем объект newCategory
-        res.status(201).json(newCategory);
+        res.status(201).json({
+            success: true,
+            data: newCategory
+        });
     }
     //обработка ошибок
     catch (error) { 
         console.error(error)
-        res.status(500).json({error: 'Ошибка при создании категории'});
+        res.status(500).json({
+            sucess: false,
+            error: 'Ошибка при создании категории'
+        });
     }
 };
 
