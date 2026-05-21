@@ -6,16 +6,32 @@ datasource db {
   provider = "postgresql" 
 }
 
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categories  Category[]
+  timeEntries TimeEntry[]
+
+  @@map("users")
+}
+
 model Category {
   id          String      @id @default(cuid())
   name        String
   color       String?     @default("#3b82f6")
-  userId      String?
+  userId      String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  entries     TimeEntry[]
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeEntries TimeEntry[]
 
+  @@unique([userId, name]) 
   @@map("categories")
 }
 
@@ -26,11 +42,12 @@ model TimeEntry {
   duration    Int?        // в минутах
   description String?
   categoryId  String
-  userId      String?
+  userId      String
 
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@map("time_entries")

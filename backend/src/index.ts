@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import categoryRoutes from './routes/categoryRoutes';
 import timeEntryRoutes from './routes/timeEntryRoutes';
-
+import authRoutes from './routes/authRoutes'
 
 dotenv.config();
 
@@ -23,6 +23,7 @@ app.use(express.json({limit: '1mb'})); //парсинг JSON с лимитом �
 //Роуты
 app.use('/api/categories', categoryRoutes);
 app.use('/api/timeEntry', timeEntryRoutes);
+app.use('api/auth', authRoutes);
 
 //Главная страница
 app.get('/', (req, res) => {
