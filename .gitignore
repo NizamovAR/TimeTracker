@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Prisma
+prisma/migrations/*/
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
