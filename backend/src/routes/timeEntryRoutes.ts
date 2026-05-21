@@ -1,10 +1,23 @@
-import express from 'express';
-import timeEntryController from '../controllers/timeEntryController';
+import { Router } from 'express';
+import { validate } from '../lib/validate';
+import {
+    getAllTimeEntries,
+    createTimeEntry,
+    updateTimeEntry,
+    deleteTimeEntry,
+} from '../controllers/timeEntryController';
 
-const router = express.Router();
+import {
+    createTimeEntrySchema,
+    updateTimeEntrySchema,
+} from '../lib/Validations/timeEntry';
 
-//Создаем роуты 
-router.post('/', timeEntryController.createTimeEntry);
-router.get('/',timeEntryController.getAllTimeEntries);
+const router = Router();
+
+//Создаем роуты
+router.get('/', getAllTimeEntries); 
+router.post('/', validate(createTimeEntrySchema), createTimeEntry);
+router.put('/:id', validate(updateTimeEntrySchema), updateTimeEntry);
+router.delete('/:id', deleteTimeEntry);
 
 export default router;

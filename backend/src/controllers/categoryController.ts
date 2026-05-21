@@ -2,67 +2,54 @@ import { Request, Response } from 'express';
 import prisma from '../lib/db';
 
 
-//Получить все категории
+
+//Получить все категории api/categories
 export const getAllCategories = async (req: Request, res: Response) => {
-    try {
-        //Получаем все категории, отсортированные по времени добавления
-        const categories = await prisma.category.findMany({
-            orderBy: { createdAt: 'desc' }
-        });
-        //отправляем объект categories
-        res.json({
-            success: true,
-            data: categories
-        });
-    }
-    //обработка ошибок
-    catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            error: 'Что-то пошло не так при получении категории'
-        });
-    }
+    const categories = await prisma.category.findMany({
+        orderBy: {name: 'asc'},
+    });
+
+    res.json({
+        success: true,
+        data: categories
+    });
 };
 
-//Создать новую категорию
+//Создать новую категорию api/categories
 export const createCategory = async (req: Request, res: Response) => {
-    try {
-        //берем данные из фронтенда
-        const {name, color } = req.body; 
+    const validatedData = req.body;
 
-        //Проверяем пришло ли имя
-        if(!name) {
-            res.status(400).json({
-                success: false,
-                error: 'Имя категории обязательно' 
-            });
-            return;
-        }
-        //создание новой категории
-        const newCategory = await prisma.category.create({
-            data: {
-                name: name.trim(),
-                color: color || '#3b82f6'
-            }
-        });
-        //отправляем объект newCategory
-        res.status(201).json({
-            success: true,
-            data: newCategory
-        });
-    }
-    //обработка ошибок
-    catch (error) { 
-        console.error(error)
-        res.status(500).json({
-            sucess: false,
-            error: 'Ошибка при создании категории'
-        });
-    }
+    const category = await prisma.category.create({
+        data: validatedData,
+    });
+
+    res.status(201).json({
+        success: true,
+        data: category,
+    });
 };
 
-export default { 
-    getAllCategories, 
-    createCategory
+//Обновление категории api/categories/:id
+export const updateCategory = async (req: Request, res: Response) => {
+    const id  = req.params.id as string;
+    const validatedData = req.body;
+
+    const category = await prisma.category.update({
+        where: { id }, 
+        data: validatedData,
+    }); 
+
+    res.json({
+        success: true,
+        data: validatedData,
+    })
+}
+
+//Удаление категории /api/categories/:id
+export const deleteCategory = async (req: Request, res: Response) => {
+    const id  = req.params.id as string
+
+    await prisma.category.delete({ where: { id }});
+
+    res.status(204).send();
 };
