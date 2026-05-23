@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
 import prisma from '../lib/db';
 
-
-
 //Получить все категории api/categories
 export const getAllCategories = async (req: Request, res: Response) => {
     const categories = await prisma.category.findMany({
-        orderBy: {name: 'asc'},
+        where: { userId: req.user!.userId },
+        orderBy: { name: 'asc' },
     });
 
     res.json({
@@ -20,7 +19,10 @@ export const createCategory = async (req: Request, res: Response) => {
     const validatedData = req.body;
 
     const category = await prisma.category.create({
-        data: validatedData,
+        data: {
+            ...validatedData,
+            userId: req.user!.userId,
+        },
     });
 
     res.status(201).json({
@@ -35,7 +37,10 @@ export const updateCategory = async (req: Request, res: Response) => {
     const validatedData = req.body;
 
     const category = await prisma.category.update({
-        where: { id }, 
+        where: { 
+            id,
+            userId: req.user!.userId 
+        }, 
         data: validatedData,
     }); 
 
@@ -49,7 +54,12 @@ export const updateCategory = async (req: Request, res: Response) => {
 export const deleteCategory = async (req: Request, res: Response) => {
     const id  = req.params.id as string
 
-    await prisma.category.delete({ where: { id }});
+    await prisma.category.delete({ 
+        where: { 
+            id, 
+            userId: req.user!.userId
+        }
+    });
 
     res.status(204).send();
 };

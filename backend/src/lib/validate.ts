@@ -3,7 +3,11 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from './errors';
 
 export const validate = (schema: z.ZodSchema) => {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return (
+        req: Request, 
+        res: Response, 
+        next: NextFunction
+    ) => {
         try {
             const validated = schema.parse({
                 ...req.body,

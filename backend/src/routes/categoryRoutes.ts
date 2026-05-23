@@ -12,12 +12,14 @@ import {
     updateCategorySchema
 } from '../lib/Validations/category';
 
+import { protect } from '../middleware/protect'
+
 const router = Router();
 
 //прописываем роуты
-router.get('/', getAllCategories);
-router.post('/', validate(createCategorySchema), createCategory);
-router.put('/:id', validate(updateCategorySchema), updateCategory);
-router.delete('/:id', deleteCategory);
+router.get('/', protect, getAllCategories);
+router.post('/', protect, validate(createCategorySchema), createCategory);
+router.put('/:id', protect, validate(updateCategorySchema), updateCategory);
+router.delete('/:id', protect, deleteCategory);
 
 export default router;

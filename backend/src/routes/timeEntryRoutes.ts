@@ -12,12 +12,25 @@ import {
     updateTimeEntrySchema,
 } from '../lib/Validations/timeEntry';
 
+import { protect } from '../middleware/protect';
+
 const router = Router();
 
-//Создаем роуты
-router.get('/', getAllTimeEntries); 
-router.post('/', validate(createTimeEntrySchema), createTimeEntry);
-router.put('/:id', validate(updateTimeEntrySchema), updateTimeEntry);
-router.delete('/:id', deleteTimeEntry);
+//Получение всех записей
+router.get('/', protect, getAllTimeEntries);
+//Создание новой записи
+router.post('/', 
+    protect, 
+    validate(createTimeEntrySchema), 
+    createTimeEntry
+);
+//Обновление записи 
+router.put('/:id', 
+    protect, 
+    validate(updateTimeEntrySchema), 
+    updateTimeEntry
+);
+//Удаление записи 
+router.delete('/:id', protect, deleteTimeEntry);
 
 export default router;
